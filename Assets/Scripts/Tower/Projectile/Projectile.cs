@@ -64,6 +64,8 @@ public abstract class Projectile : MonoBehaviour
         {
             return;
         }
+
+        Instantiate(_onHitParticleSystem, transform.position, transform.rotation);
         HitEnemy(entity);
         Destroy(gameObject);
     }

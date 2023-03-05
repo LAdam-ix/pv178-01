@@ -65,6 +65,7 @@ public class Tower : MonoBehaviour
                 return;
             }
         }
+        UpdateRotation();
         if (_fireCountdoown < 0)
         {
             Shoot();
@@ -81,6 +82,14 @@ public class Tower : MonoBehaviour
             _projectileSpawn.transform.rotation
         );
         projectile.Target = _target;
+    }
+
+    protected void UpdateRotation()
+    {
+        if (_target != null)
+        {
+            _objectToPan.rotation = Quaternion.LookRotation(_target.position - transform.position);
+        }
     }
 
     protected virtual void Shoot()
@@ -102,7 +111,7 @@ public class Tower : MonoBehaviour
             _enemyLayerMask
         );
 
-        float highestHealt = float.PositiveInfinity;
+        float shortestDistance = float.PositiveInfinity;
         GameObject targetedEnemy = null;
         foreach (var hit in colisions)
         {
@@ -112,10 +121,10 @@ public class Tower : MonoBehaviour
             // mask works so I leaving it here to be sure it's works
             if (entity.tag == EnemyTag)
             {
-                int health = entity.GetComponent<HealthComponent>().HealthValue;
-                if (highestHealt > health)
+                float distance = Vector3.Distance(transform.position, entity.transform.position);
+                if (shortestDistance > distance)
                 {
-                    highestHealt = health;
+                    shortestDistance = distance;
                     targetedEnemy = entity;
                 }
             }
